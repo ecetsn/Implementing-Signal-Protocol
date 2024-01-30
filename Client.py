@@ -27,17 +27,6 @@ IKey_Ser = Point(132351248475355330994683568503977831554129197010962095852488053
 
 ################################  Phase-1 Digital Signature Scheme #################################
 
-def SignVer(message, h, s, E, QA):
-    n = E.order
-    P = E.generator
-    V = s*P + h*QA
-    v = V.x%n
-    h_ = int.from_bytes(SHA3_256.new(v.to_bytes((v.bit_length()+7)//8, byteorder='big')+message).digest(), byteorder='big')%n
-    if h_ == h:
-        return True
-    else:
-        return False
-
 def key_generation():
     sA = random.randint(1, curve.order - 2)
     QA = sA * curve.generator
@@ -74,6 +63,7 @@ def signature_verification_bytes(message_bytes, signature, QA):
     hashVal = SHA3_256.new(vm)
     h_prime = int(hashVal.hexdigest(), 16) % curve.order
     return h == h_prime
+    
 ############################### Server Communication #########################################
 
 def IKRegReq(h,s,x,y):
@@ -159,8 +149,6 @@ def Checker(stuID, stuIDB, msgID, decmsg):
     response = requests.put('{}/{}'.format(API_URL, "Checker"), json = mes)		
     print(response.json())
 
-############## The new functions of phase 3 ###############
-
 #Pseudo-client will send you 5 messages to your inbox via server when you call this function
 def PseudoSendMsgPH3(h,s):
     mes = {'ID': stuID, 'H': h, 'S': s}
@@ -200,43 +188,6 @@ def Status(stuID, h, s):
     if (response.ok == True):
         res = response.json()
         return res['numMSG'], res['numOTK'], res['StatusMSG']
-
-
-############## The new functions of BONUS ###############
-
-# Exchange partial keys with users 2 and 4
-def ExchangePartialKeys(stuID, z1x, z1y, h, s):
-    request_msg = {'ID': stuID, 'z1.x': z1x, 'z1.y': z1y, 'H': h, 'S': s}
-    print("Sending your PK (z) and receiving others ...")
-    response = requests.get('{}/{}'.format(API_URL, "ExchangePartialKeys"), json=request_msg)
-    if ((response.ok) == True):
-        print(response.json())
-        res = response.json()
-        return res['z2.x'], res['z2.y'], res['z4.x'], res['z4.y']
-    else:
-        print(response.json())
-        return 0, 0, 0, 0
-
-
-# Exchange partial keys with user 3
-def ExchangeXs(stuID, x1x, x1y, h, s):
-    request_msg = {'ID': stuID, 'x1.x': x1x, 'x1.y': x1y, 'H': h, 'S': s}
-    print("Sending your x and receiving others ...")
-    response = requests.get('{}/{}'.format(API_URL, "ExchangeXs"), json=request_msg)
-    if ((response.ok) == True):
-        print(response.json())
-        res = response.json()
-        return res['x2.x'], res['x2.y'], res['x3.x'], res['x3.y'], res['x4.x'], res['x4.y']
-    else:
-        print(response.json())
-        return 0, 0, 0, 0, 0, 0
-
-# Check if your conference key is correct
-def BonusChecker(stuID, Kx, Ky):
-    mes = {'ID': stuID, 'K.x': Kx, 'K.y': Ky}
-    print("Sending message is: ", mes)
-    response = requests.put('{}/{}'.format(API_URL, "BonusChecker"), json=mes)
-    print(response.json())
 
 ############################### OTK - HMAC Key Generation #####################################################
 
@@ -499,60 +450,6 @@ def SendingMsg(decMsgs, keyBundle, IKA_Pub, IKA_pr ,SPKA_pub):
                 SendMsg(stuID, stuIDB, keyID, msg[0], msg_to_send, IKA_Pub.x, IKA_Pub.y, EKey_Pub.x, EKey_Pub.y)
                 print("\n+++++++++++++++++++++++++++++++++++++++++++++\n")
 
-############## The new functions of BONUS ###############
-
-# Exchange partial keys with users 2 and 4
-def ExchangePartialKeys(stuID, z1x, z1y, h, s):
-    request_msg = {'ID': stuID, 'z1.x': z1x, 'z1.y': z1y, 'H': h, 'S': s}
-    print("Sending your PK (z) and receiving others ...")
-    response = requests.get('{}/{}'.format(API_URL, "ExchangePartialKeys"), json=request_msg)
-    if ((response.ok) == True):
-        print(response.json())
-        res = response.json()
-        return res['z2.x'], res['z2.y'], res['z4.x'], res['z4.y']
-    else:
-        print(response.json())
-        return 0, 0, 0, 0
-
-
-# Exchange partial keys with user 3
-def ExchangeXs(stuID, x1x, x1y, h, s):
-    request_msg = {'ID': stuID, 'x1.x': x1x, 'x1.y': x1y, 'H': h, 'S': s}
-    print("Sending your x and receiving others ...")
-    response = requests.get('{}/{}'.format(API_URL, "ExchangeXs"), json=request_msg)
-    if ((response.ok) == True):
-        print(response.json())
-        res = response.json()
-        return res['x2.x'], res['x2.y'], res['x3.x'], res['x3.y'], res['x4.x'], res['x4.y']
-    else:
-        print(response.json())
-        return 0, 0, 0, 0, 0, 0
-
-# Check if your conference key is correct
-def BonusChecker(stuID, Kx, Ky):
-    mes = {'ID': stuID, 'K.x': Kx, 'K.y': Ky}
-    print("Sending message is: ", mes)
-    response = requests.put('{}/{}'.format(API_URL, "BonusChecker"), json=mes)
-    print(response.json())
-
-def signature_generation_bonus(z1, sA):
-    k = randint(1, curve.order - 2) 
-    R = k * curve.generator
-    r = R.x % curve.order
-    
-    # Convert z1.x and z1.y to bytes
-    z1_x_bytes = z1.x.to_bytes((z1.x.bit_length() + 7) // 8, byteorder='big')
-    z1_y_bytes = z1.y.to_bytes((z1.y.bit_length() + 7) // 8, byteorder='big')
-    z1_bytes = z1_x_bytes + z1_y_bytes
-    
-    # Create the message to hash
-    rm = r.to_bytes((r.bit_length() + 7) // 8, byteorder='big') + z1_bytes
-    hashVal = SHA3_256.new(rm)
-    h = int(hashVal.hexdigest(), 16) % curve.order
-    
-    s = (k - sA * h) % curve.order
-    return h, s
-
 ############################################### Main ########################################
             
 print("\nGenerating Identity Key Pair, Signed Pre-Key Pair and One-time Pre-key for Phase-3")
@@ -676,43 +573,6 @@ print("\n+++++++++++++++++++++++++++++++++++++++++++++\n")
 print("\nSending the received messages back to the pseudo-client..")
 SendingMsg(decMsgs, keyBundle, IKey_Pub, IKey_Pr,SPKey_Pub)
 DisplayFinalMessages(decMsgs)
-
-################################ BONUS  #############################
-
-
-print("\n########## BONUS ###################\n")
-
-z1 = IKey_Pub
-r1 = IKey_Pr
-
-print("Generating my partial conference key")
-print("Signing my pratial conference key")
-h, s = signature_generation_bonus(z1, r1)
-
-#IKRegReq(h, s, z1.x, z1.y)
-
-z2x, z2y, z4x, z4y = ExchangePartialKeys(stuID, z1.x, z1.y, h, s)
-print("Exchanging partial keys\n")
-z2 = Point(curve=curve, x=z2x, y=z2y)
-z4 = Point(curve=curve, x=z4x, y=z4y)
-
-# Calculate x1
-x1 = z1 + z2 + z4
-print("calculated x1:", x1)
-
-# Sign x1 using your identity key IKA
-print("Signing x1")
-h, s = signature_generation_bonus(x1, r1)
-
-# Send x1 to the server using the ExchangeXs function
-x2x, x2y, x3x, x3y, x4x, x4y = ExchangeXs(stuID, x1.x, x1.y, h, s)
-x2= Point(curve=curve, x=x2x, y=x2y)
-x3 = Point(curve=curve, x=x3x, y=x3y)
-x4 = Point(curve=curve, x=x4x, y=x4y)
-print("exchanging X's\n")
-
-K = z4*r1 + x1*3 + x2*2 + x3
-BonusChecker(stuID, K.x, K.y)
 
 ################################ Deleting Keys  #############################
 
