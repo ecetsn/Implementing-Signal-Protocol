@@ -16,7 +16,7 @@ Developing a simplified version of the Signal Protocol, which provides forward s
 
 ## Introduction
 
-The Secure Chat System is a project designed to provide a secure messaging environment. It involves Public Key Registration and message encryption to ensure the confidentiality and integrity of communications between clients.
+The Signal Protocol is a project designed to provide a secure messaging environment. It involves Public Key Registration and message encryption to ensure the confidentiality and integrity of communications between clients.
 
 ## Features
 
@@ -33,7 +33,7 @@ The Secure Chat System is a project designed to provide a secure messaging envir
 
 ## Getting Started
 
-Follow these instructions to set up the Secure Chat System on your local machine.
+Follow these instructions to set up the Signal Protocol on your local machine.
 
 ### Prerequisites
 
@@ -52,13 +52,14 @@ Follow these instructions to set up the Secure Chat System on your local machine
     ```
 
 ### Usage
-To use the Secure Chat System, follow the guidelines provided in the documentation.
+To use the Signal Protocol, follow the guidelines provided in the documentation.
 
 ### Configuration
 No additional configuration is required for basic usage. Advanced users can explore configuration options in the settings file.
 
 ### Contributing
-I welcome contributions to enhance the Signal Protocol. If you have suggestions, bug reports, or code contributions, please follow our Contribution Guidelines.
+I welcome contributions to enhance the Signal Protocol. If you have suggestions, bug reports, or code contributions, mail me.
+- ece.tosun@sabanciuniv.edu
 
 ### License
 This project is licensed under the MIT License.
