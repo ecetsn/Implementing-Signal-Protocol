@@ -29,6 +29,8 @@ The Secure Chat System is a project designed to provide a secure messaging envir
 - **Phase III: Communication and Status Control**
   - Develop software to enable secure communication with other clients. Status control is also implemented in this phase.
 
+> More detailed explanation is given in the pdf file, also note that Receiver.py coded for Phase-3 to enable messaging between students
+
 ## Getting Started
 
 Follow these instructions to set up the Secure Chat System on your local machine.
@@ -56,10 +58,10 @@ To use the Secure Chat System, follow the guidelines provided in the documentati
 No additional configuration is required for basic usage. Advanced users can explore configuration options in the settings file.
 
 ### Contributing
-We welcome contributions to enhance the Secure Chat System. If you have suggestions, bug reports, or code contributions, please follow our Contribution Guidelines.
+I welcome contributions to enhance the Signal Protocol. If you have suggestions, bug reports, or code contributions, please follow our Contribution Guidelines.
 
 ### License
 This project is licensed under the MIT License.
 
-## Acknowledgments
+### Acknowledgments
 - This project was developed as part of the course requirements at Sabanci University.
