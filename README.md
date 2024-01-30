@@ -45,9 +45,9 @@ Follow these instructions to set up the Secure Chat System on your local machine
    git clone https://github.com/ecetsn/Implementing-Signal-Protocol.git
     ```
 2. Install dependencies:
-  ```bash
-  pip install -r requirements.txt
-  ```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 ### Usage
 To use the Secure Chat System, follow the guidelines provided in the documentation.
