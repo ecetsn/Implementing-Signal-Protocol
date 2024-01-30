@@ -64,4 +64,4 @@ I welcome contributions to enhance the Signal Protocol. If you have suggestions,
 This project is licensed under the MIT License.
 
 ### Acknowledgments
-- This project was developed as part of the course requirements at Sabanci University.
+This project was developed as part of the course requirements at Sabanci University.
